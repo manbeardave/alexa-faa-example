@@ -15,36 +15,18 @@ PlacesApiHelper.prototype.makeApiCall= function(placeName, placeCity){
     json: true
   };
   return rp(options);
-}
+};
   
-  PlacesApiHelper.prototype.formatPlacesData = function(placesData, placeName, placeCity ) {
-
+  PlacesApiHelper.prototype.formatPlacesData = function(placesData, placeName, placeCity){
+    console.log(placesData.body);
     var weather = _.template('Right now I count ${total_number} of ${name} in ${city}')({
-    total_number: placesData.hits.total,
+    total_number: placesData.body.hits.total,
     name: placeName,
-    city: placesCity
+    city: placeCity
   });
   
   return weather;
   
-  
-  // if (airportStatus.delay === 'true') {
-//     var template = _.template('There is currently a delay for ${airport}. ' +
-//       'The average delay time is ${delay_time}. ' +
-//       'Delay is because of the following: ${delay_reason}. ${weather}');
-//     return template({
-//       airport: airportStatus.name,
-//       delay_time: airportStatus.status.avgDelay,
-//       delay_reason: airportStatus.status.reason,
-//       weather: weather
-//     });
-//   } else {
-//     //    no delay
-//     return _.template('There is currently no delay at ${airport}. ${weather}')({
-//       airport: airportStatus.name,
-//       weather: weather
-//     });
-//   }
 
 };
 
