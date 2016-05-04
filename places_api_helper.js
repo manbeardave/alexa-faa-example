@@ -18,7 +18,6 @@ PlacesApiHelper.prototype.makeApiCall= function(placeName, placeCity){
 };
   
   PlacesApiHelper.prototype.formatPlacesData = function(placesData, placeName, placeCity){
-    console.log(placesData.body);
     var weather = _.template('Right now I count ${total_number} of ${name} in ${city}')({
     total_number: placesData.body.hits.total,
     name: placeName,
