@@ -18,13 +18,13 @@ PlacesApiHelper.prototype.makeApiCall= function(placeName, placeCity){
 };
   
   PlacesApiHelper.prototype.formatPlacesData = function(placesData, placeName, placeCity){
-    var weather = _.template('Right now I count ${total_number} of ${name} in ${city}')({
+    var speech = _.template('Right now I count ${total_number} of ${name} in ${city}')({
     total_number: placesData.body.hits.total,
     name: placeName,
     city: placeCity
   });
   
-  return weather;
+  return speech;
   
 
 };

@@ -4,7 +4,7 @@ var chai = require('chai');
 var chaiAsPromised = require('chai-as-promised');
 chai.use(chaiAsPromised);
 var expect = chai.expect;
-var APIHelper = require('../api_helper');
+var APIHelper = require('../places_api_helper');
 chai.config.includeStack = true;
 
 describe('APIHelper', function() {
