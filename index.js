@@ -4,7 +4,7 @@ module.change_code = 1;
 var _              = require('lodash');
 var Alexa          = require('alexa-app');
 var app            = new Alexa.app('places-skill');
-var APIHelper      = require('./places_api_helper');
+var PlacesHelper      = require('./places_api_helper');
 var SightingHelper = require('./sightings_api_helper');
 
 app.launch(function(req, res) {
@@ -13,7 +13,7 @@ app.launch(function(req, res) {
   res.say(prompt).reprompt(reprompt).shouldEndSession(false);
 });
 
-app.intent('getplaceinfo', {
+app.intent('getPlaceInfo', {
   'slots': {
     'NAME': 'LIST_OF_NAMES',  
     'CITY': 'AMAZON.US_CITIES',
@@ -31,14 +31,14 @@ app.intent('getplaceinfo', {
       res.say(prompt).reprompt(reprompt).shouldEndSession(false);
       return true;
     } else {
-          var apiHelper = new APIHelper();
-          apiHelper.makeApiCall( placeName, placeCity 
+          var placesHelper = new PlacesHelper();
+          placesHelper.makeApiCall( placeName, placeCity 
           ).then(function(placeData){
-            res.session('placeData', placeData);
-            res.say(apiHelper.formatPlacesData(placeData, placeName, placeCity)).shouldEndSession(false).send();
+            res.session('ghArray', placesHelper.formatPlaceData(placeData));
+            res.say(placesHelper.speechFromPlaceData(placeData, placeName, placeCity)).shouldEndSession(false).send();
           }).catch(function(err) {
               console.log(err);
-              var prompt = 'I didn\'t have data for an airport code of ' + placeName + " in " + placeCity;
+              var prompt = 'Sorry, something went wrong that time.';
               res.say(prompt).reprompt(reprompt).shouldEndSession(false).send();
       });
 
@@ -46,11 +46,27 @@ app.intent('getplaceinfo', {
     }
 });
   
-app.intent('getsightingsinfo', {
+app.intent('getSightingsInfo', {
     'utterances': ['{|how many sightings are available at those places?}']
     },
     function(req, res) {
       var sightingHelper = new SightingHelper();
+      var stuff = sightingHelper.getSightings(res.session('ghArray')).then(function(sightingsData){
+        res.session('sightingsData', sightingHelper.formatSightingsData(sightingsData))
+        res.say(sightingHelper.speechFromSightingsData(sightingsData)).send();
+      }).catch(function(err){
+        console.log(err);
+        var prompt = "Something happened, I'm sorry I dont have those sightings figures right now. Please try again with new places."
+        res.say(prompt).reprompt('Ask me about places in a city, bro').shouldEndSession(false).send();
+      });
+      return false;
+});
+
+app.intent('getFrequencyInfo', {
+    'utterances': ['{|can you calculate the device frequency of those sightings for me?}']
+    },
+    function(req, res) {
+      // var sightingHelper = new SightingHelper();
       var gh_array = sightingHelper.returnGeoHexes(res.session('placeData'));
       var stuff = sightingHelper.getSightings(gh_array).then(function(sightingsData){
         res.say(sightingHelper.formatSightingsData(sightingsData)).send();

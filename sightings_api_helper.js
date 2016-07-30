@@ -5,10 +5,10 @@ var gh = require('GeoHex-node')
 var rp = require('request-promise');
 var ENDPOINT = 'https://0b40ebq662.execute-api.us-west-2.amazonaws.com/qa/places?';
 
-function SightingApiHelper() { }
+function SightingsApiHelper() { }
 
   
-SightingApiHelper.prototype.returnGeoHexes = function(placeData){
+SightingsApiHelper.prototype.returnGeoHexes = function(placeData){
    
   var gh_array = [];
    for (var i = 0; i < placeData.body.hits.hits.length; i++) {
@@ -19,10 +19,15 @@ SightingApiHelper.prototype.returnGeoHexes = function(placeData){
    return gh_array;
 };
 
-SightingApiHelper.prototype.getSightings = function(ghArray){
-  
+SightingsApiHelper.prototype.formatSightingsData = function(sightingsData){
+  var counts = {
+    total: sightingsData.body.aggregations.available.value,
+    unique: sightingsData.body.aggregations.uniques.value
+  }
+};
 
-  
+
+SightingsApiHelper.prototype.getSightings = function(ghArray){
   var options = {
     method: 'GET',
     uri: ENDPOINT + 'gh=' + ghArray + '&sightings=1',
@@ -32,11 +37,11 @@ SightingApiHelper.prototype.getSightings = function(ghArray){
   return rp(options);
 };
 
-  SightingApiHelper.prototype.formatSightingsData = function(sightingsData){
-    var response = _.template('In the past year, with a half mile radius around those places, I count ${total} available impressions across ${unique} unique devices')({
-    total: sightingsData.body.aggregations.available.value,
-    unique: sightingsData.body.aggregations.uniques.value
-  });
+SightingsApiHelper.prototype.speechFromSightingsData = function(sightingsData){
+  var response = _.template('In the past year, with a half mile radius around those places, I count ${total} available impressions across ${unique} unique devices')({
+  total: sightingsData.body.aggregations.available.value,
+  unique: sightingsData.body.aggregations.uniques.value
+});
 
   return response;
 
@@ -46,7 +51,7 @@ SightingApiHelper.prototype.getSightings = function(ghArray){
 
 
 	 
- module.exports = SightingApiHelper;
+ module.exports = SightingsApiHelper;
 
 
 
