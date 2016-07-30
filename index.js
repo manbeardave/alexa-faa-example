@@ -52,10 +52,10 @@ app.intent('getSightingsInfo', {
     'utterances': ['{|how many sightings are available at those places?}']
     },
     function(req, res) {
-      var sightingHelper = new SightingHelper();
-      var stuff = sightingHelper.getSightings(res.session('ghArray')).then(function(sightingsData){
-        res.session('sightingsData', sightingHelper.formatSightingsData(sightingsData))
-        res.say(sightingHelper.speechFromSightingsData(sightingsData)).send();
+      var sightingsHelper = new SightingHelper();
+      var stuff = sightingsHelper.getSightings(res.session('ghArray')).then(function(sightingsData){
+        res.session('sightingsData', sightingsHelper.formatSightingsData(sightingsData))
+        res.say(sightingsHelper.speechFromSightingsData(sightingsData)).send();
       }).catch(function(err){
         console.log(err);
         var prompt = "Something happened, I'm sorry I dont have those sightings figures right now. Please try again with new places."
