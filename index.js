@@ -53,9 +53,9 @@ app.intent('getSightingsInfo', {
     },
     function(req, res) {
       var sightingsHelper = new SightingHelper();
-      var stuff = sightingsHelper.getSightings(res.session('ghArray')).then(function(sightingsData){
-        res.session('sightingsData', sightingsHelper.formatSightingsData(sightingsData))
-        res.say(sightingsHelper.speechFromSightingsData(sightingsData)).send();
+      var get_and_respond = sightingsHelper.getSightings(res.session('ghArray')).then(function(sightingsData){
+        res.session('counts', sightingsHelper.formatSightingsData(sightingsData))
+        res.say(sightingsHelper.speechFromSightingsData(sightingsData)).shouldEndSession(false).send();
       }).catch(function(err){
         console.log(err);
         var prompt = "Something happened, I'm sorry I dont have those sightings figures right now. Please try again with new places."
@@ -68,15 +68,12 @@ app.intent('getFrequencyInfo', {
     'utterances': ['{|can you calculate the device frequency of those sightings for me?}']
     },
     function(req, res) {
-      // var sightingHelper = new SightingHelper();
-      var gh_array = sightingHelper.returnGeoHexes(res.session('placeData'));
-      var stuff = sightingHelper.getSightings(gh_array).then(function(sightingsData){
-        res.say(sightingHelper.formatSightingsData(sightingsData)).send();
-      }).catch(function(err){
-        console.log(err);
-        var prompt = "Something happened, I'm sorry I dont have those sightings figures right now. Please try again with new places."
-        res.say(prompt).reprompt('Ask me about places in a city, bro').shouldEndSession(false).send();
-      });
+      var sightingsHelper = new SightingHelper();
+      var counts    = res.session('counts');
+      var frequency = counts.total / counts.unique;
+      console.log(frequency);
+      res.say(sightingsHelper.speechFrequency(frequency)).send();
+
       return false;
 });
   

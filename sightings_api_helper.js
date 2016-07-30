@@ -23,7 +23,9 @@ SightingsApiHelper.prototype.formatSightingsData = function(sightingsData){
   var counts = {
     total: sightingsData.body.aggregations.available.value,
     unique: sightingsData.body.aggregations.uniques.value
-  }
+  };
+  console.log(counts);
+  return counts;
 };
 
 
@@ -41,12 +43,17 @@ SightingsApiHelper.prototype.getSightings = function(ghArray){
 
 SightingsApiHelper.prototype.speechFromSightingsData = function(sightingsData){
   var response = _.template('In the past year, with a half mile radius around those places, I count ${total} available impressions across ${unique} unique devices')({
-  total: sightingsData.body.aggregations.available.value,
-  unique: sightingsData.body.aggregations.uniques.value
-});
+    total: sightingsData.body.aggregations.available.value,
+    unique: sightingsData.body.aggregations.uniques.value
+  });
+  return response
+};
 
-  return response;
-
+SightingsApiHelper.prototype.speechFrequency = function(frequency){
+  var response = _.template('The is frequency or impression density ${frequency} impressions per device')({
+    frequency: parseInt(frequency)
+  });
+  return response
 
 };
 
