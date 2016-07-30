@@ -13,6 +13,7 @@ app.launch(function(req, res) {
   res.say(prompt).reprompt(reprompt).shouldEndSession(false);
 });
 
+
 app.intent('getPlaceInfo', {
   'slots': {
     'NAME': 'LIST_OF_NAMES',  
@@ -47,6 +48,7 @@ app.intent('getPlaceInfo', {
 });
   
 app.intent('getSightingsInfo', {
+
     'utterances': ['{|how many sightings are available at those places?}']
     },
     function(req, res) {

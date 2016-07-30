@@ -8,7 +8,6 @@ var ENDPOINT = 'https://0b40ebq662.execute-api.us-west-2.amazonaws.com/qa/places
 function PlacesApiHelper() { }
 
 PlacesApiHelper.prototype.makeApiCall = function(placeName, placeCity){
-
   var options = {
     method: 'GET',
     uri: ENDPOINT + 'name=' + placeName + '&city=' + placeCity + '&places=1',
@@ -18,6 +17,7 @@ PlacesApiHelper.prototype.makeApiCall = function(placeName, placeCity){
   return rp(options);
 };
   
+
 PlacesApiHelper.prototype.formatPlaceData = function(placeData){
   var gh_array = [];
    for (var i = 0; i < placeData.body.hits.hits.length; i++) {
@@ -35,6 +35,7 @@ PlacesApiHelper.prototype.speechFromPlaceData = function(placesData, placeName, 
       name: placeName,
       city: placeCity
       });
+
   
   return speech;
   

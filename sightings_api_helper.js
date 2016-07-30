@@ -28,6 +28,7 @@ SightingsApiHelper.prototype.formatSightingsData = function(sightingsData){
 
 
 SightingsApiHelper.prototype.getSightings = function(ghArray){
+
   var options = {
     method: 'GET',
     uri: ENDPOINT + 'gh=' + ghArray + '&sightings=1',
@@ -36,6 +37,7 @@ SightingsApiHelper.prototype.getSightings = function(ghArray){
   };
   return rp(options);
 };
+
 
 SightingsApiHelper.prototype.speechFromSightingsData = function(sightingsData){
   var response = _.template('In the past year, with a half mile radius around those places, I count ${total} available impressions across ${unique} unique devices')({
@@ -51,10 +53,5 @@ SightingsApiHelper.prototype.speechFromSightingsData = function(sightingsData){
 
 
 	 
+
  module.exports = SightingsApiHelper;
-
-
-
-
-
- 
