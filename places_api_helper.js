@@ -10,7 +10,7 @@ PlacesApiHelper.prototype.makeApiCall= function(placeName, placeCity){
 
   var options = {
     method: 'GET',
-    uri: ENDPOINT + 'name=' + placeName + '&city=' + placeCity,
+    uri: ENDPOINT + 'name=' + placeName + '&city=' + placeCity + '&places=1',
     resolveWithFullResponse: true,
     json: true
   };

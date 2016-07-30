@@ -24,10 +24,10 @@ app.intent('getplaceinfo', {
     //get the slot
     var placeName = req.slot('NAME');
     var placeCity = req.slot('CITY');
-    var reprompt = 'Ask me about places in a city, fool!';
+    var reprompt = 'Ask me about places in a city!';
 
   if (_.isEmpty(placeName) || _.isEmpty(placeCity)) {
-      var prompt = 'Ask me about places in a city, fool';
+      var prompt = 'Ask me about places in a city';
       res.say(prompt).reprompt(reprompt).shouldEndSession(false);
       return true;
     } else {
@@ -35,7 +35,7 @@ app.intent('getplaceinfo', {
           apiHelper.makeApiCall( placeName, placeCity 
           ).then(function(placeData){
             res.session('placeData', placeData);
-            res.say(apiHelper.formatPlacesData(placeData, placeName, placeCity)).send();
+            res.say(apiHelper.formatPlacesData(placeData, placeName, placeCity)).shouldEndSession(false).send();
           }).catch(function(err) {
               console.log(err);
               var prompt = 'I didn\'t have data for an airport code of ' + placeName + " in " + placeCity;
@@ -51,8 +51,15 @@ app.intent('getsightingsinfo', {
     },
     function(req, res) {
       var sightingHelper = new SightingHelper();
-      var gh_string = sightingHelper.returnGeoHexes(res.session('placeData'));
-      sightingHelper.getSightings(gh_string);    
+      var gh_array = sightingHelper.returnGeoHexes(res.session('placeData'));
+      var stuff = sightingHelper.getSightings(gh_array).then(function(sightingsData){
+        res.say(sightingHelper.formatSightingsData(sightingsData)).send();
+      }).catch(function(err){
+        console.log(err);
+        var prompt = "Something happened, I'm sorry I dont have those sightings figures right now. Please try again with new places."
+        res.say(prompt).reprompt('Ask me about places in a city, bro').shouldEndSession(false).send();
+      });
+      return false;
 });
   
   
