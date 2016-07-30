@@ -1,12 +1,12 @@
 {
-  "name": "faa-info",
+  "name": "places skill",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
     "test": "mocha"
   },
-  "author": "me",
+  "author": "dave hines",
   "license": "ISC",
   "dependencies": {
     "alexa-app": "^2.3.2",

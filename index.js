@@ -3,7 +3,7 @@
 module.change_code = 1;
 var _              = require('lodash');
 var Alexa          = require('alexa-app');
-var app            = new Alexa.app('airportinfo');
+var app            = new Alexa.app('places-skill');
 var APIHelper      = require('./places_api_helper');
 var SightingHelper = require('./sightings_api_helper');
 
