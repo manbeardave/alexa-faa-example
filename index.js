@@ -5,11 +5,12 @@ var _              = require('lodash');
 var Alexa          = require('alexa-app');
 var app            = new Alexa.app('places-skill');
 var PlacesHelper      = require('./places_api_helper');
-var SightingHelper = require('./sightings_api_helper');
+var SightingHelper    = require('./sightings_api_helper');
+var AdmApiHelper      = require('./adm_api_helper');
 
 app.launch(function(req, res) {
-  var prompt = 'Hi Dave.  I would love to talk places.  Which places can I tell you about?';
-  var reprompt = 'Sorry, I am not sure if I heard anything.  Can you ask again?'
+  var prompt = 'Hi Dave.  I would love to talk about verve data';
+  var reprompt = 'Sorry, I am not sure if I heard anything.  Can you ask again?';
   res.say(prompt).reprompt(reprompt).shouldEndSession(false);
 });
 
@@ -74,6 +75,22 @@ app.intent('getFrequencyInfo', {
       console.log(frequency);
       res.say(sightingsHelper.speechFrequency(frequency)).send();
 
+      return false;
+});
+
+app.intent('getFlightNumberFromAdm', {
+    'utterances': ['{|how many flights has YP entered into ADM to date?}']
+    },
+    function(req, res) {
+      var admApiHelper = new AdmApiHelper();
+      
+      var get_and_respond = admApiHelper.getFlightsForYP().then(function(AdmFlightsData){
+        res.say(admApiHelper.speechFromAdmData(AdmFlightsData)).shouldEndSession(true).send();
+      }).catch(function(err){
+        console.log(err);
+        var prompt = "Something happened, can you try again?."
+        res.say(prompt).reprompt('Ask me about flights again bro').shouldEndSession(false).send();
+      });
       return false;
 });
   
